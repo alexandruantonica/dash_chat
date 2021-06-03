@@ -225,22 +225,18 @@ class _MessageListViewState extends State<MessageListView> {
                                   padding: EdgeInsets.symmetric(
                                     horizontal: constraints.maxWidth * 0.02,
                                   ),
-                                  child: Opacity(
-                                    opacity:
+                                  child: AvatarContainer(
+                                    user: widget.messages[i].user,
+                                    onPress: widget.onPressAvatar,
+                                    onLongPress: widget.onLongPressAvatar,
+                                    avatarBuilder: widget.avatarBuilder,
+                                    avatarMaxSize: widget.avatarMaxSize,
+                                    visible:
                                         (widget.showAvatarForEverMessage! ||
-                                                    showAvatar) &&
-                                                (widget.messages[i].user.uid !=
-                                                        widget.user.uid ||
-                                                    widget.messagesOnSameSide)
-                                            ? 1
-                                            : 0,
-                                    child: AvatarContainer(
-                                      user: widget.messages[i].user,
-                                      onPress: widget.onPressAvatar,
-                                      onLongPress: widget.onLongPressAvatar,
-                                      avatarBuilder: widget.avatarBuilder,
-                                      avatarMaxSize: widget.avatarMaxSize,
-                                    ),
+                                                showAvatar) &&
+                                            (widget.messages[i].user.uid !=
+                                                    widget.user.uid ||
+                                                widget.messagesOnSameSide),
                                   ),
                                 ),
                                 Expanded(
@@ -328,21 +324,13 @@ class _MessageListViewState extends State<MessageListView> {
                                     padding: EdgeInsets.symmetric(
                                       horizontal: constraints.maxWidth * 0.02,
                                     ),
-                                    child: Opacity(
-                                      opacity:
-                                          (widget.showAvatarForEverMessage! ||
-                                                      showAvatar) &&
-                                                  widget.messages[i].user.uid ==
-                                                      widget.user.uid
-                                              ? 1
-                                              : 0,
-                                      child: AvatarContainer(
-                                        user: widget.messages[i].user,
-                                        onPress: widget.onPressAvatar,
-                                        onLongPress: widget.onLongPressAvatar,
-                                        avatarBuilder: widget.avatarBuilder,
-                                        avatarMaxSize: widget.avatarMaxSize,
-                                      ),
+                                    child: AvatarContainer(
+                                      user: widget.messages[i].user,
+                                      onPress: widget.onPressAvatar,
+                                      onLongPress: widget.onLongPressAvatar,
+                                      avatarBuilder: widget.avatarBuilder,
+                                      avatarMaxSize: widget.avatarMaxSize,
+                                      visible: true,
                                     ),
                                   )
                                 else

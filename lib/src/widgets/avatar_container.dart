@@ -27,6 +27,7 @@ class AvatarContainer extends StatelessWidget {
   final BoxConstraints? constraints;
 
   final double? avatarMaxSize;
+  final bool visible;
 
   const AvatarContainer({
     required this.user,
@@ -35,6 +36,7 @@ class AvatarContainer extends StatelessWidget {
     this.avatarBuilder,
     this.constraints,
     this.avatarMaxSize,
+    this.visible = true,
   });
 
   @override
@@ -52,34 +54,42 @@ class AvatarContainer extends StatelessWidget {
           : Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                ClipOval(
-                  child: Container(
-                    height: constraints.maxWidth * 0.08,
+                if (!visible)
+                  SizedBox(
                     width: constraints.maxWidth * 0.08,
-                    constraints: BoxConstraints(
-                      maxWidth: avatarMaxSize!,
-                      maxHeight: avatarMaxSize!,
-                    ),
-                    color: Colors.grey,
-                    child: Center(
-                        child: Text(user.name == null || user.name!.isEmpty
-                            ? ''
-                            : user.name![0])),
+                    height: 1,
                   ),
-                ),
-                user.avatar != null && user.avatar!.length != 0
-                    ? Center(
-                        child: ClipOval(
-                          child: FadeInImage.memoryNetwork(
-                            image: user.avatar!,
-                            placeholder: kTransparentImage,
-                            fit: BoxFit.cover,
-                            height: constraints.maxWidth * 0.08,
-                            width: constraints.maxWidth * 0.08,
-                          ),
+                if (visible)
+                  ClipOval(
+                    child: Container(
+                      height: constraints.maxWidth * 0.08,
+                      width: constraints.maxWidth * 0.08,
+                      constraints: BoxConstraints(
+                        maxWidth: avatarMaxSize!,
+                        maxHeight: avatarMaxSize!,
+                      ),
+                      color: Colors.grey,
+                      child: Center(
+                        child: Text(
+                          user.name == null || user.name!.isEmpty
+                              ? ''
+                              : user.name![0],
                         ),
-                      )
-                    : Container()
+                      ),
+                    ),
+                  ),
+                if (user.avatar != null && user.avatar!.length != 0 && visible)
+                  Center(
+                    child: ClipOval(
+                      child: FadeInImage.memoryNetwork(
+                        image: user.avatar!,
+                        placeholder: kTransparentImage,
+                        fit: BoxFit.cover,
+                        height: constraints.maxWidth * 0.08,
+                        width: constraints.maxWidth * 0.08,
+                      ),
+                    ),
+                  )
               ],
             ),
     );
