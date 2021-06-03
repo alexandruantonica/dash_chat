@@ -94,7 +94,7 @@ class DashChat extends StatefulWidget {
 
   /// avatarBuilder will override the the default avatar which uses
   /// [CircleAvatar].
-  final Widget Function(ChatUser)? avatarBuilder;
+  final Widget Function(ChatUser, bool)? avatarBuilder;
 
   /// Should the avatar be shown for every message defaulst to false.
   final bool showAvatarForEveryMessage;
@@ -275,10 +275,9 @@ class DashChat extends StatefulWidget {
   final BoxDecoration Function(ChatMessage, bool?)? messageDecorationBuilder;
 
   late ScrollToBottomStyle scrollToBottomStyle;
-
   final bool messagesOnSameSide;
-
   final bool showUserAvatarOnTop;
+  final bool inputContainerSafeArea;
 
   DashChat({
     Key? key,
@@ -358,6 +357,7 @@ class DashChat extends StatefulWidget {
     this.messageDecorationBuilder,
     this.messagesOnSameSide = true,
     this.showUserAvatarOnTop = true,
+    this.inputContainerSafeArea = true,
   }) : super(key: key) {
     this.scrollToBottomStyle = scrollToBottomStyle ?? new ScrollToBottomStyle();
   }
@@ -562,7 +562,7 @@ class DashChatState extends State<DashChat> {
                   if (widget.chatFooterBuilder != null)
                     widget.chatFooterBuilder!(),
                   if (!widget.readOnly)
-                    SafeArea(
+                    _inputContainerSafeArea(
                       child: ChatInputToolbar(
                         key: inputKey,
                         sendOnEnter: widget.sendOnEnter,
@@ -623,6 +623,14 @@ class DashChatState extends State<DashChat> {
         );
       },
     );
+  }
+
+  Widget _inputContainerSafeArea({required Widget child}) {
+    return widget.inputContainerSafeArea
+        ? SafeArea(
+            child: child,
+          )
+        : child;
   }
 
   QuickReply _mapReply(Reply reply) => QuickReply(

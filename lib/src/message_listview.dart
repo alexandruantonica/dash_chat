@@ -12,7 +12,7 @@ class MessageListView extends StatefulWidget {
   final bool? renderAvatarOnTop;
   final Function(ChatMessage)? onLongPressMessage;
   final bool inverted;
-  final Widget Function(ChatUser)? avatarBuilder;
+  final Widget Function(ChatUser, bool)? avatarBuilder;
   final Widget Function(ChatMessage, bool)? messageBuilder;
   final Widget Function(String?, [ChatMessage])? messageTextBuilder;
   final Widget Function(String?, [ChatMessage])? messageImageBuilder;

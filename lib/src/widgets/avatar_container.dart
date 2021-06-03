@@ -20,7 +20,7 @@ class AvatarContainer extends StatelessWidget {
 
   /// [avatarBuilder] function takea a function with this structure
   /// [Widget Function(ChatUser)] to build the avatar
-  final Widget Function(ChatUser)? avatarBuilder;
+  final Widget Function(ChatUser, bool)? avatarBuilder;
 
   /// [constraints] to apply to build the layout
   /// by default used MediaQuery and take screen size as constaints
@@ -50,7 +50,7 @@ class AvatarContainer extends StatelessWidget {
       onTap: () => onPress?.call(user),
       onLongPress: () => onLongPress?.call(user),
       child: avatarBuilder != null
-          ? avatarBuilder!(user)
+          ? avatarBuilder!(user, visible)
           : Stack(
               alignment: Alignment.center,
               children: <Widget>[
