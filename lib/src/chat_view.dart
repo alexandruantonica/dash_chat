@@ -120,7 +120,7 @@ class DashChat extends StatefulWidget {
   /// messageBuilder will override the the default chat container which uses
   /// and you will need to build complete message Widget it will not accept
   /// and include any other builder functions.
-  final Widget Function(ChatMessage)? messageBuilder;
+  final Widget Function(ChatMessage, bool)? messageBuilder;
 
   /// messageTextBuilder will override the the default message text.
   final Widget Function(String?, [ChatMessage])? messageTextBuilder;
@@ -276,6 +276,10 @@ class DashChat extends StatefulWidget {
 
   late ScrollToBottomStyle scrollToBottomStyle;
 
+  final bool messagesOnSameSide;
+
+  final bool showUserAvatarOnTop;
+
   DashChat({
     Key? key,
     ScrollToBottomStyle? scrollToBottomStyle,
@@ -352,6 +356,8 @@ class DashChat extends StatefulWidget {
     this.messagePadding = const EdgeInsets.all(8.0),
     this.textBeforeImage = true,
     this.messageDecorationBuilder,
+    this.messagesOnSameSide = true,
+    this.showUserAvatarOnTop = true,
   }) : super(key: key) {
     this.scrollToBottomStyle = scrollToBottomStyle ?? new ScrollToBottomStyle();
   }
@@ -482,44 +488,45 @@ class DashChatState extends State<DashChat> {
                     : MainAxisAlignment.end,
                 children: <Widget>[
                   MessageListView(
-                      avatarMaxSize: widget.avatarMaxSize,
-                      messagePadding: widget.messagePadding,
-                      constraints: constraints,
-                      shouldShowLoadEarlier: widget.shouldShowLoadEarlier,
-                      showLoadEarlierWidget: widget.showLoadEarlierWidget,
-                      onLoadEarlier: widget.onLoadEarlier,
-                      defaultLoadCallback: changeDefaultLoadMore,
-                      messageContainerPadding:
-                          widget.messageContainerPadding as EdgeInsets,
-                      scrollController: widget.scrollController != null
-                          ? widget.scrollController
-                          : scrollController,
-                      user: widget.user,
-                      messages: widget.messages,
-                      showuserAvatar: widget.showUserAvatar,
-                      dateFormat: widget.dateFormat,
-                      timeFormat: widget.timeFormat,
-                      inverted: widget.inverted,
-                      showAvatarForEverMessage:
-                          widget.showAvatarForEveryMessage,
-                      onLongPressAvatar: widget.onLongPressAvatar,
-                      onPressAvatar: widget.onPressAvatar,
-                      onLongPressMessage: widget.onLongPressMessage,
-                      avatarBuilder: widget.avatarBuilder,
-                      messageBuilder: widget.messageBuilder,
-                      messageTextBuilder: widget.messageTextBuilder,
-                      messageImageBuilder: widget.messageImageBuilder,
-                      messageTimeBuilder: widget.messageTimeBuilder,
-                      dateBuilder: widget.dateBuilder,
-                      messageContainerDecoration:
-                          widget.messageContainerDecoration,
-                      parsePatterns: widget.parsePatterns,
-                      changeVisible: changeVisible,
-                      visible: visible,
-                      showLoadMore: showLoadMore,
-                      messageButtonsBuilder: widget.messageButtonsBuilder,
-                      messageDecorationBuilder:
-                          widget.messageDecorationBuilder),
+                    avatarMaxSize: widget.avatarMaxSize,
+                    messagePadding: widget.messagePadding,
+                    constraints: constraints,
+                    shouldShowLoadEarlier: widget.shouldShowLoadEarlier,
+                    showLoadEarlierWidget: widget.showLoadEarlierWidget,
+                    onLoadEarlier: widget.onLoadEarlier,
+                    defaultLoadCallback: changeDefaultLoadMore,
+                    messageContainerPadding:
+                        widget.messageContainerPadding as EdgeInsets,
+                    scrollController: widget.scrollController != null
+                        ? widget.scrollController
+                        : scrollController,
+                    user: widget.user,
+                    messages: widget.messages,
+                    showuserAvatar: widget.showUserAvatar,
+                    dateFormat: widget.dateFormat,
+                    timeFormat: widget.timeFormat,
+                    inverted: widget.inverted,
+                    showAvatarForEverMessage: widget.showAvatarForEveryMessage,
+                    onLongPressAvatar: widget.onLongPressAvatar,
+                    onPressAvatar: widget.onPressAvatar,
+                    onLongPressMessage: widget.onLongPressMessage,
+                    avatarBuilder: widget.avatarBuilder,
+                    messageBuilder: widget.messageBuilder,
+                    messageTextBuilder: widget.messageTextBuilder,
+                    messageImageBuilder: widget.messageImageBuilder,
+                    messageTimeBuilder: widget.messageTimeBuilder,
+                    dateBuilder: widget.dateBuilder,
+                    messageContainerDecoration:
+                        widget.messageContainerDecoration,
+                    parsePatterns: widget.parsePatterns,
+                    changeVisible: changeVisible,
+                    visible: visible,
+                    showLoadMore: showLoadMore,
+                    messageButtonsBuilder: widget.messageButtonsBuilder,
+                    messageDecorationBuilder: widget.messageDecorationBuilder,
+                    messagesOnSameSide: widget.messagesOnSameSide,
+                    showUserAvatarOnTop: widget.showUserAvatarOnTop,
+                  ),
                   if (widget.messages.length != 0 &&
                       widget.messages.last.user.uid != widget.user.uid &&
                       widget.messages.last.quickReplies != null)

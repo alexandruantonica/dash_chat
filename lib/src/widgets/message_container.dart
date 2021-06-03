@@ -67,6 +67,8 @@ class MessageContainer extends StatelessWidget {
   /// return BoxDecoration
   final BoxDecoration Function(ChatMessage, bool?)? messageDecorationBuilder;
 
+  final bool messagesOnSameSide;
+
   const MessageContainer({
     required this.message,
     required this.timeFormat,
@@ -82,6 +84,7 @@ class MessageContainer extends StatelessWidget {
     this.buttons,
     this.messagePadding = const EdgeInsets.all(8.0),
     this.messageDecorationBuilder,
+    this.messagesOnSameSide = false,
   });
 
   @override
@@ -114,8 +117,9 @@ class MessageContainer extends StatelessWidget {
         padding: messagePadding,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment:
-              isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment: (isUser && !messagesOnSameSide)
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
           children: <Widget>[
             if (this.textBeforeImage)
               _buildMessageText()

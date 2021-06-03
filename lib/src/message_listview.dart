@@ -13,7 +13,7 @@ class MessageListView extends StatefulWidget {
   final Function(ChatMessage)? onLongPressMessage;
   final bool inverted;
   final Widget Function(ChatUser)? avatarBuilder;
-  final Widget Function(ChatMessage)? messageBuilder;
+  final Widget Function(ChatMessage, bool)? messageBuilder;
   final Widget Function(String?, [ChatMessage])? messageTextBuilder;
   final Widget Function(String?, [ChatMessage])? messageImageBuilder;
   final Widget Function(String, [ChatMessage])? messageTimeBuilder;
@@ -36,6 +36,8 @@ class MessageListView extends StatefulWidget {
   final bool textBeforeImage;
   final double? avatarMaxSize;
   final BoxDecoration Function(ChatMessage, bool?)? messageDecorationBuilder;
+  final bool messagesOnSameSide;
+  final bool showUserAvatarOnTop;
 
   MessageListView({
     this.showLoadEarlierWidget,
@@ -74,6 +76,8 @@ class MessageListView extends StatefulWidget {
     this.messagePadding = const EdgeInsets.all(8.0),
     this.textBeforeImage = true,
     this.messageDecorationBuilder,
+    this.messagesOnSameSide = false,
+    this.showUserAvatarOnTop = true,
   });
 
   @override
@@ -103,12 +107,30 @@ class _MessageListViewState extends State<MessageListView> {
     if (widget.showAvatarForEverMessage!) {
       return true;
     }
-    if (!widget.inverted && index + 1 < widget.messages.length) {
-      return widget.messages[index + 1].user.uid !=
-          widget.messages[index].user.uid;
-    } else if (widget.inverted && index - 1 >= 0) {
-      return widget.messages[index - 1].user.uid !=
-          widget.messages[index].user.uid;
+
+    if (widget.showUserAvatarOnTop) {
+      if (!widget.inverted && index - 1 >= 0) {
+        if (index > 0) {
+          return widget.messages[index - 1].user.uid !=
+              widget.messages[index].user.uid;
+        }
+        return true;
+      } else if (widget.inverted && index + 1 <= widget.messages.length) {
+        if (index < widget.messages.length - 1) {
+          return widget.messages[index + 1].user.uid !=
+              widget.messages[index - 1].user.uid;
+        }
+        return true;
+      }
+      return true;
+    } else {
+      if (!widget.inverted && index + 1 < widget.messages.length) {
+        return widget.messages[index + 1].user.uid !=
+            widget.messages[index].user.uid;
+      } else if (widget.inverted && index - 1 >= 0) {
+        return widget.messages[index - 1].user.uid !=
+            widget.messages[index].user.uid;
+      }
     }
     return true;
   }
@@ -192,11 +214,12 @@ class _MessageListViewState extends State<MessageListView> {
                               bottom: last ? 10.0 : 0.0,
                             ),
                             child: Row(
-                              mainAxisAlignment:
-                                  widget.messages[i].user.uid == widget.user.uid
-                                      ? MainAxisAlignment.end
-                                      : MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: (widget.messages[i].user.uid ==
+                                          widget.user.uid &&
+                                      !widget.messagesOnSameSide)
+                                  ? MainAxisAlignment.end
+                                  : MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.symmetric(
@@ -206,8 +229,9 @@ class _MessageListViewState extends State<MessageListView> {
                                     opacity:
                                         (widget.showAvatarForEverMessage! ||
                                                     showAvatar) &&
-                                                widget.messages[i].user.uid !=
-                                                    widget.user.uid
+                                                (widget.messages[i].user.uid !=
+                                                        widget.user.uid ||
+                                                    widget.messagesOnSameSide)
                                             ? 1
                                             : 0,
                                     child: AvatarContainer(
@@ -255,12 +279,13 @@ class _MessageListViewState extends State<MessageListView> {
                                       }
                                     },
                                     child: widget.messageBuilder != null
-                                        ? widget
-                                            .messageBuilder!(widget.messages[i])
+                                        ? widget.messageBuilder!(
+                                            widget.messages[i], showAvatar)
                                         : Align(
-                                            alignment: widget
-                                                        .messages[i].user.uid ==
-                                                    widget.user.uid
+                                            alignment: (widget.messages[i].user
+                                                            .uid ==
+                                                        widget.user.uid &&
+                                                    !widget.messagesOnSameSide)
                                                 ? AlignmentDirectional.centerEnd
                                                 : AlignmentDirectional
                                                     .centerStart,
@@ -291,11 +316,14 @@ class _MessageListViewState extends State<MessageListView> {
                                                   widget.textBeforeImage,
                                               messageDecorationBuilder: widget
                                                   .messageDecorationBuilder,
+                                              messagesOnSameSide:
+                                                  widget.messagesOnSameSide,
                                             ),
                                           ),
                                   ),
                                 ),
-                                if (widget.showuserAvatar!)
+                                if (widget.showuserAvatar! &&
+                                    !widget.messagesOnSameSide)
                                   Padding(
                                     padding: EdgeInsets.symmetric(
                                       horizontal: constraints.maxWidth * 0.02,
