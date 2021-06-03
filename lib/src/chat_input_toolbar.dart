@@ -18,7 +18,7 @@ class ChatInputToolbar extends StatelessWidget {
   final bool inputDisabled;
   final String Function()? messageIdGenerator;
   final Widget Function(Function)? sendButtonBuilder;
-  final Widget Function()? inputFooterBuilder;
+  final Widget Function(Function)? inputFooterBuilder;
   final bool showInputCursor;
   final double inputCursorWidth;
   final Color? inputCursorColor;
@@ -152,7 +152,16 @@ class ChatInputToolbar extends StatelessWidget {
               if (!showTraillingBeforeSend) ...trailling,
             ],
           ),
-          if (inputFooterBuilder != null) inputFooterBuilder!()
+          if (inputFooterBuilder != null)
+            inputFooterBuilder!(() async {
+              if (text!.length != 0) {
+                await onSend!(message);
+
+                controller!.text = "";
+
+                onTextChange!("");
+              }
+            })
         ],
       ),
     );

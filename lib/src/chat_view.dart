@@ -186,7 +186,7 @@ class DashChat extends StatefulWidget {
 
   /// A Widget that will be shown below the [ChatInputToolbar] like you can
   /// show a list of buttons like file image just like in Slack app.
-  final Widget Function()? inputFooterBuilder;
+  final Widget Function(Function)? inputFooterBuilder;
 
   /// Padding for the [MessageListView].
   final EdgeInsetsGeometry messageContainerPadding;
