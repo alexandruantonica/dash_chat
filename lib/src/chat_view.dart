@@ -426,6 +426,8 @@ class DashChatState extends State<DashChat> {
         ? 0.0
         : scrollController.position.maxScrollExtent + 25.0;
 
+    print("DashChat: initPos: $initPos");
+
     scrollController
         .animateTo(
       initPos,

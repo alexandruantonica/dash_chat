@@ -134,7 +134,7 @@ class ChatInputToolbar extends StatelessWidget {
               if (showTraillingBeforeSend) ...trailling,
               if (sendButtonBuilder != null)
                 sendButtonBuilder!(() async {
-                  await _sendButtonBuilderCallback(message);
+                  await _sendMessage(context, message);
                 })
               else
                 IconButton(
@@ -148,26 +148,11 @@ class ChatInputToolbar extends StatelessWidget {
           ),
           if (inputFooterBuilder != null)
             inputFooterBuilder!(() async {
-              await _sendButtonBuilderCallback(message);
+              await _sendMessage(context, message);
             })
         ],
       ),
     );
-  }
-
-  Future _sendButtonBuilderCallback(ChatMessage message) async {
-    debugPrint(
-        "DashChat : inputFooterToolbar : sendMessage : $text / ${text?.length}");
-    if (text?.isNotEmpty == true) {
-      debugPrint(
-          "DashChat : inputFooterToolbar : sendMessage : message ready to be sent");
-      await onSend!(message);
-      debugPrint("DashChat : inputFooterToolbar : sendMessage : message sent");
-
-      controller!.text = "";
-
-      onTextChange!("");
-    }
   }
 
   Future _sendMessage(BuildContext context, ChatMessage message) async {
@@ -177,16 +162,25 @@ class ChatInputToolbar extends StatelessWidget {
       controller!.text = "";
 
       onTextChange!("");
+      _focusInputAndScrollToBottom(context);
+    }
+  }
 
+  void _focusInputAndScrollToBottom(BuildContext context) {
+    try {
       FocusScope.of(context).requestFocus(focusNode);
 
       Timer(Duration(milliseconds: 150), () {
+        print(
+            'DashChat: Scroll to bottom : ${scrollController!.position.maxScrollExtent}');
         scrollController!.animateTo(
           reverse ? 0.0 : scrollController!.position.maxScrollExtent + 30.0,
           curve: Curves.easeOut,
           duration: const Duration(milliseconds: 300),
         );
       });
+    } catch (e) {
+      debugPrint("DashChat : _focusInputAndScrollToBottom : $e");
     }
   }
 }
