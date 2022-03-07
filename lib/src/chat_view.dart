@@ -422,6 +422,7 @@ class DashChatState extends State<DashChat> {
   }
 
   void widgetBuilt(Duration d) {
+    print('DashChat: widgetBuilt ${d.toString()}');
     double initPos = widget.inverted
         ? 0.0
         : scrollController.position.maxScrollExtent + 25.0;
@@ -499,9 +500,7 @@ class DashChatState extends State<DashChat> {
                     defaultLoadCallback: changeDefaultLoadMore,
                     messageContainerPadding:
                         widget.messageContainerPadding as EdgeInsets,
-                    scrollController: widget.scrollController != null
-                        ? widget.scrollController
-                        : scrollController,
+                    scrollController: scrollController,
                     user: widget.user,
                     messages: widget.messages,
                     showuserAvatar: widget.showUserAvatar,
@@ -596,9 +595,7 @@ class DashChatState extends State<DashChat> {
                         inputCursorWidth: widget.inputCursorWidth,
                         showInputCursor: widget.showInputCursor,
                         alwaysShowSend: widget.alwaysShowSend,
-                        scrollController: widget.scrollController != null
-                            ? widget.scrollController
-                            : scrollController,
+                        scrollController: scrollController,
                         focusNode: inputFocusNode,
                         reverse: widget.inverted,
                       ),

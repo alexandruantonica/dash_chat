@@ -134,7 +134,7 @@ class ChatInputToolbar extends StatelessWidget {
               if (showTraillingBeforeSend) ...trailling,
               if (sendButtonBuilder != null)
                 sendButtonBuilder!(() async {
-                  await _sendMessage(context, message);
+                  await _sendButtonBuilderCallback(message);
                 })
               else
                 IconButton(
@@ -148,11 +148,26 @@ class ChatInputToolbar extends StatelessWidget {
           ),
           if (inputFooterBuilder != null)
             inputFooterBuilder!(() async {
-              await _sendMessage(context, message);
+              await _sendButtonBuilderCallback(message);
             })
         ],
       ),
     );
+  }
+
+  Future _sendButtonBuilderCallback(ChatMessage message) async {
+    debugPrint(
+        "DashChat : inputFooterToolbar : sendMessage : $text / ${text?.length}");
+    if (text?.isNotEmpty == true) {
+      debugPrint(
+          "DashChat : inputFooterToolbar : sendMessage : message ready to be sent");
+      await onSend!(message);
+      debugPrint("DashChat : inputFooterToolbar : sendMessage : message sent");
+
+      controller!.text = "";
+
+      onTextChange!("");
+    }
   }
 
   Future _sendMessage(BuildContext context, ChatMessage message) async {
