@@ -411,7 +411,7 @@ class DashChatState extends State<DashChat> {
     scrollController = widget.scrollController ?? ScrollController();
     textController = widget.textController ?? TextEditingController();
     inputFocusNode = widget.focusNode ?? FocusNode();
-    WidgetsBinding.instance!.addPostFrameCallback(widgetBuilt);
+    _ambiguate(WidgetsBinding.instance)!.addPostFrameCallback(widgetBuilt);
     super.initState();
   }
 
@@ -640,3 +640,11 @@ class DashChatState extends State<DashChat> {
         quickReplyTextStyle: widget.quickReplyTextStyle,
       );
 }
+
+/// This allows a value of type T or T?
+/// to be treated as a value of type T?.
+///
+/// We use this so that APIs that have become
+/// non-nullable can still be used with `!` and `?`
+/// to support older versions of the API as well.
+T? _ambiguate<T>(T? value) => value;
